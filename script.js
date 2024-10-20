@@ -1,4 +1,4 @@
-              *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
+//* * *    *   *    *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
  *   █████╗ ██╗  ██╗██╗██╗██╗     ███████╗██╗ ██████╗ ██╗   ██╗██╗   ██╗  *
  *   ██╔══██╗██║  ██║██║██║██║     ██╔════╝██║██╔═══██╗██║   ██║██║   ██║  *
  *   ███████║███████║██║██║██║     █████╗  ██║██║   ██║██║   ██║██║   ██║  *
@@ -12,7 +12,7 @@
  *   ║   This code is crafted using its own code BETA powerful library.     ║  *
  *   ║   Credits: Made by LEGACY Ar!O                                       ║  *
  *   ╚═════════════════════════════════════════════════════════════════════╝  *
- *              *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
+ *    *      *    *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  //
 
 const startPrankButton = document.getElementById('startPrank');
 const hiddenButton = document.getElementById('hiddenButton');
