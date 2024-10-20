@@ -15,13 +15,13 @@
  */
 
 const startPrankButton = document.getElementById('startPrank');
-const hiddenButton = document.getElementById('hiddenButton');
+const stopPrankButton = document.getElementById('stopPrank');
 const messages = [
     "Oh hi there! Good news that you're trapped!",
     "You can't escape from here!",
     "Oh, you wanna escape?",
     "Try!",
-    "Can't?? Sorry, I made you angry and surprised. Find a button to escape!"
+    "Can't?? Sorry, I made you angry and surprised. Find a hidden button to escape!"
 ];
 
 function showMessage() {
@@ -36,8 +36,18 @@ function startPrank() {
         return "Are you sure you want to leave?";
     };
 
-    // Show the hidden button
-    hiddenButton.style.display = 'block';
+    // Hide the start button
+    startPrankButton.style.display = 'none';
+
+    // Position the stop button in the top left corner and make it tiny
+    stopPrankButton.style.position = 'fixed';
+    stopPrankButton.style.top = '5px';
+    stopPrankButton.style.left = '5px';
+    stopPrankButton.style.width = '10px';
+    stopPrankButton.style.height = '10px';
+    stopPrankButton.style.fontSize = '1px';
+    stopPrankButton.style.opacity = '0.1';
+    stopPrankButton.style.display = 'block';
 
     // Start flashing colors
     const colors = ['white', 'black', 'pink', 'blue'];
@@ -48,13 +58,43 @@ function startPrank() {
         i++;
     }, 100); // Change color every 100 ms
 
+    // Disable right-click
+    document.oncontextmenu = function() { return false; };
+
+    // Disable keyboard shortcuts
+    document.onkeydown = function(e) {
+        if (e.ctrlKey || e.altKey || e.metaKey) {
+            return false;
+        }
+        if ([116, 123].indexOf(e.keyCode) > -1) { // F5 and F12 keys
+            return false;
+        }
+    };
+
+    // Disable selection
+    document.onselectstart = function() { return false; };
+
+    // Make the page fullscreen
+    if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+    } else if (document.documentElement.mozRequestFullScreen) {
+        document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) {
+        document.documentElement.msRequestFullscreen();
+    }
+
     // Stop the prank when the stop button is clicked
-    document.getElementById('stopPrank').addEventListener('click', () => {
+    stopPrankButton.addEventListener('click', () => {
         clearInterval(interval);
         document.body.style.backgroundColor = ''; // Reset background
-        hiddenButton.style.display = 'none'; // Hide stop button
         window.onbeforeunload = null; // Re-enable refreshing and closing
-        alert("You found it! Now go!");
+        document.oncontextmenu = null; // Re-enable right-click
+        document.onkeydown = null; // Re-enable keyboard shortcuts
+        document.onselectstart = null; // Re-enable selection
+        alert("You found it! Now you can leave.");
+        location.reload(); // Reload the page to reset everything
     });
 
     // Show messages in a loop
