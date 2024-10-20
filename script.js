@@ -10,7 +10,7 @@
  *   ║   Powered by KA1 tamatarnet                                         ║  
  *   ║   System affiliated by PD MIRCHI V1                                  ║  
  *   ║   This code is crafted using its own code BETA powerful library.     ║  
- *   ║   Credits: Made by LEGACY Ar!O                                       ║  
+ *   ║   Credits: Made by LEGACY Ar!O and dramatic kai                      ║  
  *   ╚═════════════════════════════════════════════════════════════════════╝  
  */
 
