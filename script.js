@@ -21,85 +21,96 @@ const messages = [
     "You can't escape from here!",
     "Oh, you wanna escape?",
     "Try!",
-    "Can't?? Sorry, I made you angry and surprised. Find a hidden button to escape!"
+    "Can't?? Sorry, I made you angry and surprised. Find the stop button to escape!"
 ];
+
+let leaveAttempts = 0;
 
 function showMessage() {
     const message = messages[Math.floor(Math.random() * messages.length)];
     alert(message);
 }
 
-// Function to start the prank
 function startPrank() {
-    // Disable refreshing and closing
-    window.onbeforeunload = function() {
-        return "Are you sure you want to leave?";
-    };
-
-    // Hide the start button
     startPrankButton.style.display = 'none';
 
-    // Position the stop button in the top left corner and make it tiny
+    // Make the stop button visible but in a random position
     stopPrankButton.style.position = 'fixed';
-    stopPrankButton.style.top = '5px';
-    stopPrankButton.style.left = '5px';
-    stopPrankButton.style.width = '10px';
-    stopPrankButton.style.height = '10px';
-    stopPrankButton.style.fontSize = '1px';
-    stopPrankButton.style.opacity = '0.1';
+    stopPrankButton.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+    stopPrankButton.style.left = Math.random() * (window.innerWidth - 100) + 'px';
     stopPrankButton.style.display = 'block';
+    stopPrankButton.style.zIndex = '9999';
 
-    // Start flashing colors
     const colors = ['white', 'black', 'pink', 'blue'];
     let i = 0;
 
     const interval = setInterval(() => {
         document.body.style.backgroundColor = colors[i % colors.length];
         i++;
-    }, 100); // Change color every 100 ms
+    }, 100);
+
+    // Prevent closing the tab or browser
+    window.onbeforeunload = (e) => {
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+    };
+
+    // Handle leave attempts
+    window.addEventListener('unload', handleLeaveAttempt);
 
     // Disable right-click
-    document.oncontextmenu = function() { return false; };
+    document.oncontextmenu = () => false;
 
-    // Disable keyboard shortcuts
-    document.onkeydown = function(e) {
-        if (e.ctrlKey || e.altKey || e.metaKey) {
-            return false;
-        }
-        if ([116, 123].indexOf(e.keyCode) > -1) { // F5 and F12 keys
+    // Disable some keyboard shortcuts
+    document.onkeydown = (e) => {
+        if (e.ctrlKey && (e.key === 'w' || e.key === 'W' || e.key === 'F4')) {
+            e.preventDefault();
             return false;
         }
     };
 
-    // Disable selection
-    document.onselectstart = function() { return false; };
-
-    // Make the page fullscreen
+    // Request fullscreen
     if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen();
-    } else if (document.documentElement.mozRequestFullScreen) {
-        document.documentElement.mozRequestFullScreen();
-    } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen();
-    } else if (document.documentElement.msRequestFullscreen) {
-        document.documentElement.msRequestFullscreen();
     }
 
-    // Stop the prank when the stop button is clicked
     stopPrankButton.addEventListener('click', () => {
         clearInterval(interval);
-        document.body.style.backgroundColor = ''; // Reset background
-        window.onbeforeunload = null; // Re-enable refreshing and closing
-        document.oncontextmenu = null; // Re-enable right-click
-        document.onkeydown = null; // Re-enable keyboard shortcuts
-        document.onselectstart = null; // Re-enable selection
+        document.body.style.backgroundColor = '';
+        window.onbeforeunload = null;
+        window.removeEventListener('unload', handleLeaveAttempt);
+        document.oncontextmenu = null;
+        document.onkeydown = null;
         alert("You found it! Now you can leave.");
-        location.reload(); // Reload the page to reset everything
+        location.reload();
     });
 
-    // Show messages in a loop
-    setInterval(showMessage, 2000); // Show message every 2 seconds
+    setInterval(showMessage, 2000);
 }
 
-// Add event listener to start button
+function handleLeaveAttempt() {
+    leaveAttempts++;
+    if (leaveAttempts === 1) {
+        // On first attempt, stay on the same page
+        setTimeout(() => {
+            window.location.reload();
+        }, 50);
+    } else if (leaveAttempts === 2) {
+        // On second attempt, redirect to YouTube
+        setTimeout(() => {
+            window.location.href = "https://youtu.be/xvFZjo5PgG0?si=rPiQKQ8Ezms-th5W";
+        }, 50);
+    }
+}
+
 startPrankButton.addEventListener('click', startPrank);
+
+// Check if this is a reload after a leave attempt
+if (sessionStorage.getItem('leaveAttempt')) {
+    leaveAttempts = parseInt(sessionStorage.getItem('leaveAttempt'));
+    sessionStorage.setItem('leaveAttempt', leaveAttempts + 1);
+    startPrank();
+} else {
+    sessionStorage.setItem('leaveAttempt', '0');
+}
